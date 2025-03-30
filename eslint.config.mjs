@@ -1,8 +1,10 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+
 import { FlatCompat } from "@eslint/eslintrc";
-import eslintPluginPrettier from "eslint-plugin-prettier";
 import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginImport from "eslint-plugin-import";
+import eslintPluginPrettier from "eslint-plugin-prettier";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,10 +18,33 @@ const eslintConfig = [
   {
     plugins: {
       prettier: eslintPluginPrettier,
+      import: eslintPluginImport,
     },
     rules: {
       ...eslintConfigPrettier.rules,
       "prettier/prettier": "error",
+      "import/order": [
+        "error",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+          ],
+          pathGroups: [
+            {
+              pattern: "@/**",
+              group: "internal",
+              position: "before",
+            },
+          ],
+          "newlines-between": "always",
+          distinctGroup: true,
+        },
+      ],
     },
   },
 ];
